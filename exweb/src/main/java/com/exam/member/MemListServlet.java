@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,12 +45,14 @@ public class MemListServlet extends HttpServlet{
 //				}
 //	}
 	
-	String url ="jdbc:oracle:thin:@localhost:1521:xe"; //데이터베이스 서버 주소
-	String user ="web"; //데이터베이스 접속 아이디
-	String password ="web01"; //데이터베이스 접속 비밀번호
+	
+//	private MemberDao memberDao = new MemberDaoJdbc();
+	private MemberDao memberDao = new MemberDaoBatis(); 
+	//만약 MemberDao가 아닌 MemberDaoJdbc로 받았으면 고쳐줘야됨. 그러나 MemberDao 인터페이스로 받았으므로 고칠 필요x
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<MemberVo> list = memberDao.selectMemberList();
 		
 				// ~ 여기부터 ~ 응답객체에 출력 설정 [형식 + 파이프 라인 생성]
 				resp.setCharacterEncoding("UTF-8"); //응답객체 인코딩 설정
@@ -69,51 +73,27 @@ public class MemListServlet extends HttpServlet{
 				out.println("<button><a href=\"" + req.getContextPath() + "/member/addform.do\">회원추가</a></button>");
 				out.println("<button><a href=\"" + req.getContextPath() + "/member/delform.do\">회원삭제</a></button>");
 				
-		String sql = "SELECT mem_id, mem_pass, mem_name, mem_point FROM member";
+				
 		
-		try( 
-				//지정한 데이터베이스에 접속(로그인)
-				Connection conn = DriverManager.getConnection(url, user, password);
-				//해당 연결을 통해 실행할 SQL문을 담은 명령문 객체 생성
-				PreparedStatement pstmt = conn.prepareStatement(sql);	
-				//SQL문 실행 (SELECT 문 실행은 executeQuery()메서드 사용)
-				ResultSet rs = pstmt.executeQuery(); //반환값은 조회 결과 레코드(row)들
-				) {
-
-			
-				//처음 ResultSet 객체는 첫 레코드(row) 이전을 가리키고 있음
-				// .next() 메서드를 실행하면 다음 레코드를 가리키게 된다
-				// .next() 메서드는 다음 레코드가 있으면 true를 반환하고, 없으면 false를 반환한다
-			while (rs.next()) {
-				//rs.next();
-				//컬럼값의 데이터타입에 따라서 get타입("컬럼명") 메서드를 사용하여 컬럼값 읽기
-				String memId = rs.getString("mem_id"); //현재 가리키는 레코드(row)의 "mem_id"컬럼값 읽기
-				String memPass = rs.getString("mem_pass"); //현재 가리키는 레코드(row)의 "mem_pass"컬럼값 읽기
-				String memName = rs.getString("mem_name"); //현재 가리키는 레코드(row)의 "mem_name"컬럼값 읽기
-				int memPoint = rs.getInt("mem_point"); //현재 가리키는 레코드(row)의 "mem_point"컬럼값 읽기
+				for (MemberVo vo : list) {
+					
+				
+		
 //				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
-				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
+//				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
 				
 				// ~ 출력이 반복되는 부분 , console에 출력되는 부분을 웹 브라우저 화면에 출력 ~
-				out.print("<p>" + memId + ":" + memPass + ":" + memName + ":" + memPoint);
-//				out.println("<form action=\"" + req.getContextPath() + "/member/del.do\" method=\"post\">");
-//				out.println("<button type=\"button\" onclick=\"location.href='\" + req.getContextPath() + \"/member/del.do?memId=memId">삭제</button>");
-//				out.println(" <button><a href=\"" + req.getContextPath() + "/member/del.do?memId=" + memId + "\">삭제</a></button>");
-				out.println(" <a href=\"" + req.getContextPath() + "/member/del.do?memId=" + memId + "\"><button type='button'>삭제</button></a>");
-//				out.println("<input type=\"submit\" />");
-//				out.println("</form>                  ");
+				out.print("<p>" + vo.getMemId() + ":" + vo.getMemPass() + ":" + vo.getMemName() + ":" + vo.getMemPoint());
+		//		out.println("<form action=\"" + req.getContextPath() + "/member/del.do\" method=\"post\">");
+		//		out.println("<button type=\"button\" onclick=\"location.href='\" + req.getContextPath() + \"/member/del.do?memId=memId">삭제</button>");
+		//		out.println(" <button><a href=\"" + req.getContextPath() + "/member/del.do?memId=" + memId + "\">삭제</a></button>");
+				out.println(" <a href=\"" + req.getContextPath() + "/member/del.do?memId=" + vo.getMemId() + "\"><button type='button'>삭제</button></a>");
+		//		out.println("<input type=\"submit\" />");
+		//		out.println("</form>                  ");
 				out.println("</p>");
-			}
-				// ~ 여기까지 ~
-				
-			
-//			conn.getAutoCommit(); // 자동 commit 상태 확인 (true=자동, false=수동)
-//			conn.setAutoCommit(false); // 자동 commit 상태 setting(변경)
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
 		
+				}
+				
 				// ~ 여기부터 ~
 				out.println("</body>                  ");
 				out.println("</html>                  ");
@@ -125,5 +105,7 @@ public class MemListServlet extends HttpServlet{
 		
 			
 	}
+
+	
 	
 }

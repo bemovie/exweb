@@ -25,74 +25,30 @@ public class MemAddServlet extends HttpServlet{
 //			}
 //}	
 	
-	String url ="jdbc:oracle:thin:@localhost:1521:xe"; //데이터베이스 서버 주소
-	String user ="web"; //데이터베이스 접속 아이디
-	String password ="web01"; //데이터베이스 접속 비밀번호
+//	String url ="jdbc:oracle:thin:@localhost:1521:xe"; //데이터베이스 서버 주소
+//	String user ="web"; //데이터베이스 접속 아이디
+//	String password ="web01"; //데이터베이스 접속 비밀번호
+	
+	private MemberDao memberDao = new MemberDaoJdbc();	
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		req.setCharacterEncoding("UTF-8");
-		String memIdv = req.getParameter("memId");
-		String memPassv = req.getParameter("memPass");
-		String memNamev = req.getParameter("memName");
-		int memPointv = Integer.parseInt(req.getParameter("memPoint"));
-		
+//		req.setCharacterEncoding("UTF-8"); //필터로 이동
+		MemberVo vo = new MemberVo();
+		vo.setMemId(req.getParameter("memId"));
+		vo.setMemPass(req.getParameter("memPass"));
+		vo.setMemName(req.getParameter("memName"));
+		vo.setMemPoint(Integer.parseInt(req.getParameter("memPoint")));
 		
 //		String memId = "a004";
 //		String memPass = "1234";
 //		String memName = "호랭이";
 //		int memPoint = 90;
 		
-		String sql = "INSERT INTO member (mem_id, mem_pass, mem_name, mem_point) "
-				+ " VALUES ( ?, ?, ?, ? )";
-
+		int n = memberDao.insertMember(vo);
 		
-//try() 사용하지 않을 경우의 close 방식
-//		Connection conn=null;			//try 안의 지역 변수를 밖으로 빼냄
-//		PreparedStatement pstmt=null;	//try 안의 지역 변수를 밖으로 빼냄
-
-		int n = 0;
-		//try () 내부에 선언된 변수의 값은
-		//try-catch 블럭의 실행이 완료된 후 자동으로 close() 메서드 실행
-		try( 
-				//지정한 데이터베이스에 접속(로그인)
-				Connection conn = DriverManager.getConnection(url, user, password);
-				//해당 연결을 통해 실행할 SQL문을 담은 명령문 객체 생성
-				PreparedStatement pstmt = conn.prepareStatement(sql);	
-				) {
-			
-			//pstmt 명령문 객체에 담겨 있는 SQL문의 ?에 값을 채워넣기
-			//채워넣는 값의 타입에 따라서 set타입명() 메서드 사용
-			pstmt.setString(1, memIdv); //1번째 ?에 memId 값을 넣기
-			pstmt.setString(2, memPassv); //2번째 ?에 memPass 값을 넣기
-			pstmt.setString(3, memNamev); //3번째 ?에 memName값을 넣기
-			pstmt.setInt(4, memPointv); //4번째 ?에 memPoint 값을 넣기
-			
-			//SQL문 실행 (INSERT, UPDATE, DELETE 문 실행은 executeUpdate()메서드 사용)
-			
-			n = pstmt.executeUpdate(); //반환값은 SQL문 실행으로 영향받은 레코드(row) 수
-			System.out.println( n + "명의 회원 추가 성공");
-			
-		
-//			resp.setCharacterEncoding("UTF-8");
-//			resp.setContentType("text/html");
-//			PrintWriter out = resp.getWriter();
-//			out.println("<!DOCTYPE html>          ");
-//			out.println("<html>                   ");
-//			out.println("<head>                   ");
-//			out.println("<meta charset=\"UTF-8\"> ");
-//			out.println("<title>HELLO</title>     ");
-//			out.println("</head>                  ");
-//			out.println("<body>                   ");		
-//			out.println("<h1>" + n + "명의 회원 추가</h1>");
-//			out.println("</body>                  ");
-//			out.println("</html>                  ");
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		System.out.println(n + "명의 회원 추가");
 		
 		//회원목록 출력
 		//MemListServlet 실행!
@@ -141,5 +97,7 @@ public class MemAddServlet extends HttpServlet{
 	
 	
 	}
+
+	
 	
 }
