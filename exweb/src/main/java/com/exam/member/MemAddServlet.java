@@ -29,7 +29,7 @@ public class MemAddServlet extends HttpServlet{
 //	String user ="web"; //데이터베이스 접속 아이디
 //	String password ="web01"; //데이터베이스 접속 비밀번호
 	
-	private MemberDao memberDao = new MemberDaoJdbc();	
+	private MemberDao memberDao = new MemberDaoBatis();	
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

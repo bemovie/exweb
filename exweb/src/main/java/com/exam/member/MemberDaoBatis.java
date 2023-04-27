@@ -53,14 +53,29 @@ public class MemberDaoBatis implements MemberDao{
 
 	@Override
 	public int insertMember(MemberVo vo) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int num = 0;
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			num = session.insert("com.exam.member.MemberDao.insertMember", vo);
+			session.commit(); //INSERT,UPDATE,DELETE 후에는 commit 필요
+			}
+		
+		return num;
 	}
 
+	//삭제버튼을 클릭하면,
+	//삭제가 되도록 MemberDaoBatis 클래스와 MemberMapper.xml 파일을 변경하세요.
+	
 	@Override
 	public int deleteMember(String memIdv) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		int num = 0;
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			num = session.delete("com.exam.member.MemberDao.deleteMember", memIdv);
+			session.commit(); //INSERT,UPDATE,DELETE 후에는 commit 필요
+			}
+		
+		return num;
 	}
 
 	
