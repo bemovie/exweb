@@ -54,50 +54,54 @@ public class MemListServlet extends HttpServlet{
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<MemberVo> list = memberDao.selectMemberList();
 		
-				// ~ 여기부터 ~ 응답객체에 출력 설정 [형식 + 파이프 라인 생성]
-				resp.setCharacterEncoding("UTF-8"); //응답객체 인코딩 설정
-				resp.setContentType("text/html"); //응답객체 타입 설정
-				PrintWriter out = resp.getWriter(); //응답객체 출력 파이프 생성
+		req.setAttribute("memberList", list);
 		
-				out.println("<!DOCTYPE html>          ");
-				out.println("<html>                   ");
-				out.println("<head>                   ");
-				out.println("<meta charset=\"UTF-8\"> ");
-				out.println("<title>회원관리</title>     ");
-				out.println("<style> a{text-decoration-line: none;} a:visited {color:red;} a:hover{color:pink;}");
-				out.println("</style>");
-				out.println("</head>                  ");
-				out.println("<body>                   ");			
-				// ~ 여기까지는 한번만 있어도 되는 부분 ~ , DB 코드와 분리하기 위해 그 위로 올린다
-				out.println("<h1>회원목록</h1>");
-				out.println("<button><a href=\"" + req.getContextPath() + "/member/addform.do\">회원추가</a></button>");
-				out.println("<button><a href=\"" + req.getContextPath() + "/member/delform.do\">회원삭제</a></button>");
-				
-				
+		req.getRequestDispatcher("/WEB-INF/views/member/memList.jsp").forward(req, resp);
 		
-				for (MemberVo vo : list) {
-					
-				
-		
-//				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
-//				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
-				
-				// ~ 출력이 반복되는 부분 , console에 출력되는 부분을 웹 브라우저 화면에 출력 ~
-				out.print("<p>" + vo.getMemId() + ":" + vo.getMemPass() + ":" + vo.getMemName() + ":" + vo.getMemPoint());
-		//		out.println("<form action=\"" + req.getContextPath() + "/member/del.do\" method=\"post\">");
-		//		out.println("<button type=\"button\" onclick=\"location.href='\" + req.getContextPath() + \"/member/del.do?memId=memId">삭제</button>");
-		//		out.println(" <button><a href=\"" + req.getContextPath() + "/member/del.do?memId=" + memId + "\">삭제</a></button>");
-				out.println(" <a href=\"" + req.getContextPath() + "/member/del.do?memId=" + vo.getMemId() + "\"><button type='button'>삭제</button></a>");
-		//		out.println("<input type=\"submit\" />");
-		//		out.println("</form>                  ");
-				out.println("</p>");
-		
-				}
-				
-				// ~ 여기부터 ~
-				out.println("</body>                  ");
-				out.println("</html>                  ");
-				// ~ 아랫부분도 한번만 있으면 되서 catch문 아래쪽으로 이동 ~
+//				// ~ 여기부터 ~ 응답객체에 출력 설정 [형식 + 파이프 라인 생성]
+//				resp.setCharacterEncoding("UTF-8"); //응답객체 인코딩 설정
+//				resp.setContentType("text/html"); //응답객체 타입 설정
+//				PrintWriter out = resp.getWriter(); //응답객체 출력 파이프 생성
+//		
+//				out.println("<!DOCTYPE html>          ");
+//				out.println("<html>                   ");
+//				out.println("<head>                   ");
+//				out.println("<meta charset=\"UTF-8\"> ");
+//				out.println("<title>회원관리</title>     ");
+//				out.println("<style> a{text-decoration-line: none;} a:visited {color:red;} a:hover{color:pink;}");
+//				out.println("</style>");
+//				out.println("</head>                  ");
+//				out.println("<body>                   ");			
+//				// ~ 여기까지는 한번만 있어도 되는 부분 ~ , DB 코드와 분리하기 위해 그 위로 올린다
+//				out.println("<h1>회원목록</h1>");
+//				out.println("<button><a href=\"" + req.getContextPath() + "/member/addform.do\">회원추가</a></button>");
+//				out.println("<button><a href=\"" + req.getContextPath() + "/member/delform.do\">회원삭제</a></button>");
+//				
+//				
+//		
+//				for (MemberVo vo : list) {
+//					
+//				
+//		
+////				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
+////				System.out.println(memId + ":" + memPass + ":" + memName + ":" + memPoint);
+//				
+//				// ~ 출력이 반복되는 부분 , console에 출력되는 부분을 웹 브라우저 화면에 출력 ~
+//				out.print("<p>" + vo.getMemId() + ":" + vo.getMemPass() + ":" + vo.getMemName() + ":" + vo.getMemPoint());
+//		//		out.println("<form action=\"" + req.getContextPath() + "/member/del.do\" method=\"post\">");
+//		//		out.println("<button type=\"button\" onclick=\"location.href='\" + req.getContextPath() + \"/member/del.do?memId=memId">삭제</button>");
+//		//		out.println(" <button><a href=\"" + req.getContextPath() + "/member/del.do?memId=" + memId + "\">삭제</a></button>");
+//				out.println(" <a href=\"" + req.getContextPath() + "/member/del.do?memId=" + vo.getMemId() + "\"><button type='button'>삭제</button></a>");
+//		//		out.println("<input type=\"submit\" />");
+//		//		out.println("</form>                  ");
+//				out.println("</p>");
+//		
+//				}
+//				
+//				// ~ 여기부터 ~
+//				out.println("</body>                  ");
+//				out.println("</html>                  ");
+//				// ~ 아랫부분도 한번만 있으면 되서 catch문 아래쪽으로 이동 ~
 
 		
 //		회원목록이 이클립스 콘솔이 아닌

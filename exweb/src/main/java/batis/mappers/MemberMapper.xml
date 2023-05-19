@@ -25,6 +25,11 @@
     	SELECT mem_id, mem_pass, mem_name, mem_point FROM member
 	</select>
 	
+	<select id="selectMember" resultType="MemberVo">
+    	SELECT mem_id, mem_pass, mem_name, mem_point FROM member
+    	WHERE mem_id = #{memId}
+	</select>
+	
 	<!--  SQL문 실행시 전달받는 데이터의 타입을 parameterType 속성에 지정 가능(생략도 가능)  --> 
 	 <insert id="insertMember" parameterType="com.exam.member.MemberVo">
 	 	INSERT INTO member (mem_id, mem_pass, mem_name, mem_point)

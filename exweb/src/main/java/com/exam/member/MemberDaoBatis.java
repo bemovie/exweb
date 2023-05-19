@@ -78,6 +78,23 @@ public class MemberDaoBatis implements MemberDao{
 		return num;
 	}
 
+	@Override
+	public MemberVo selectMember(String memId) {
+		
+		MemberVo vo = null; //new ArrayList<MemberVo>(); <<이렇게 초기값을 줘도 된다
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			//실행할 SQL문과 동일한 이름의 메서드를 사용하여 SQL문 실행
+			//SELECT결과가 1행인 경우(result값이 하나) selectOne, 2행이상인 경우(list값으로) selectList 메서드 사용 
+			//첫번째 인자로 실행할 SQL문의 고유한 이름을 지정
+			//두번째 인자로 SQL문 실행시 필요한 데이터(를 담은 객체)를 전달
+			vo = session.selectOne("com.exam.member.MemberDao.selectMember", memId);
+			}
+		
+		return vo;
+
+	}
+
 	
 //	public List<MemberVo> selectListMember() {
 //	}

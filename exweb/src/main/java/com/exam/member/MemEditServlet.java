@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/member/add.do")
-public class MemAddServlet extends HttpServlet{
+@WebServlet("/member/edit.do")
+public class MemEditServlet extends HttpServlet{
 	
 //	{
 //	//애플리케이션에 JDBC 사용 전에 최초 1번은 JDBC 드라이버 클래스를 메모리에 로드 필요 
@@ -33,7 +33,11 @@ public class MemAddServlet extends HttpServlet{
 	
 	@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			req.getRequestDispatcher("/WEB-INF/views/member/memAdd.jsp").forward(req, resp);
+			String memId = req.getParameter("memId");
+			MemberVo vo = memberDao.selectMember(memId);
+			req.setAttribute("mvo", vo);
+		
+			req.getRequestDispatcher("/WEB-INF/views/member/memEdit.jsp").forward(req, resp);
 		}
 	
 	@Override

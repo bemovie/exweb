@@ -10,4 +10,6 @@ public interface MemberDao {
 
 	int deleteMember(String memIdv);
 
+	MemberVo selectMember(String memId);
+
 }

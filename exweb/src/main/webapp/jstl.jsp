@@ -118,14 +118,50 @@ ${n} <br>
 ${n2}<br>
 
 현재 JSP파일에서 JSTL 국제화 태그가 사용할 로케일 강제 지정
-지정하지 않으면, Accept_Language 요청 헤더 값 사용)
-<fmt:setLocale value="en_US"/>
+(지정하지 않으면, Accept_Language 요청 헤더 값 사용)
+국가코드는 ISO 3166-1 alpha-2, 언어코드는 ISO 639-1 (java.util.Locale 참조)<br>
+<%-- <fmt:setLocale value="en_US"/> --%>
+<%-- <fmt:formatDate value="${d}" type="both" dateStyle="full" timeStyle="full" /><br>
+<fmt:formatNumber value="${n}" type="currency" /><br> --%>
 
 메시지를 저장한 프로퍼티파일이 "클래스패스/폴더명/번들명_언어_국가.properties" 일때,
 basename은 "폴더명.번들명"
 <fmt:setBundle basename="msg" var="mb"/>
 <fmt:message bundle="${mb}" key="str" />
 
+<fmt:message bundle="${mb}" key="str2">
+	<!-- 메시지내용 중 {0},{1},... 위치에 주입할 값을 fmt:param 태그로 순서대로 지정 -->
+	<fmt:param value="JSP" />
+	<fmt:param value="!!!" />
+</fmt:message>
+
+
+<h1>JSTL functions</h1>
+
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<br> ${fn:length("aBcD")} <%="aBcD".length()%> ${"aBcD".length()} 
+<br> ${fn:contains("aBcD","Bc")} <%="aBcD".contains("Bc")%> ${"aBcD".contains("Bc")}   
+<br> ${fn:containsIgnoreCase("aBcD","bC")}  <%="aBcD".toLowerCase().contains("bC".toLowerCase())%> ${"aBcD".toLowerCase().contains("bC".toLowerCase())}
+<br> ${fn:startsWith("aBcD","aB")} <%="aBcD".startsWith("aB")%> ${"aBcD".startsWith("aB")}
+<br> ${fn:endsWith("aBcD","cD")} <%="aBcD".endsWith("cD")%> ${"aBcD".endsWith("cD")}
+<br> ${fn:escapeXml("<h1>제목</h1>")} <c:out value="<h1>제목</h1>" /> 
+<br> ${fn:indexOf("aBcD","Bc")} <%="aBcD".indexOf("Bc")%> ${"aBcD".indexOf("Bc")} 
+<%
+//	String[] arr = {"A","B","C"}; 
+	pageContext.setAttribute("pa", arr);
+// 	EL에서 String.join() 사용시, Iterable 파라미터에 배열이 타입이 맞지 않는 오류 발생 (버그인듯) 
+// 	배열이 아닌 ArrayList 객체를 사용하면 정상실행 
+	pageContext.setAttribute("pl", new java.util.ArrayList<String>(java.util.Arrays.asList(arr))); 
+%>
+<br> ${fn:join(pa,"::")} <%=String.join("::", arr)%> ${String.join("::", pl)} ${String.join("::", ["A","B","C"])}       
+<br> ${(fn:split("a,B:c,D",",:"))[2]} <%="a,B:c,D".split("[,:]")[2]%> ${"a,B:c,D".split("[,:]")[2]} 
+<br> ${fn:replace("aBcDBc","Bc","efg")} <%="aBcDBc".replace("Bc","efg") %> ${"aBcDBc".replace("Bc","efg")}
+<br> ${fn:substring("aBcD", 1, 2)} <%="aBcD".substring(1,2)%> ${"aBcD".substring(1,2)}
+<br> ${fn:substringAfter("aBcD", "Bc")}  <%="aBcD".substring( "aBcD".indexOf("Bc") + "Bc".length() )%>  ${"aBcD".substring("aBcD".indexOf("Bc")+"Bc".length())} 
+<br> ${fn:substringBefore("aBcD", "Bc")} <%="aBcD".substring(0, "aBcD".indexOf("Bc") )%> ${"aBcD".substring(0,"aBcD".indexOf("Bc"))}
+<br> ${fn:toLowerCase("aBcD")} <%="aBcD".toLowerCase()%> ${"aBcD".toLowerCase()}
+<br> ${fn:toUpperCase("aBcD")} <%="aBcD".toUpperCase()%> ${"aBcD".toUpperCase()}
+<br> [${fn:trim("   aB cD  ")}] [<%="   aB cD  ".trim()%>] [${"   aB cD  ".trim()}]
 
 </body>
 </html>
