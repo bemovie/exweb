@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 //회원목록 화면에 "회원추가" 링크를 추가하고,
 //	그 링크를 클릭하면, 회원정보를 입력하는 폼 화면으로 이동하도록
@@ -30,6 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 
 //삭제 링크가 버튼 모양이면 더 좋을 것 같아요.
 
+//2023-05-26
+//로그인하지 않은 상태에서 회원목록 페이지에 접속하면,
+//로그인 화면으로 이동하도록 구현
 
 @WebServlet("/member/list.do")
 public class MemListServlet extends HttpServlet{
@@ -51,12 +55,35 @@ public class MemListServlet extends HttpServlet{
 	//만약 MemberDao가 아닌 MemberDaoJdbc로 받았으면 고쳐줘야됨. 그러나 MemberDao 인터페이스로 받았으므로 고칠 필요x
 	
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<MemberVo> list = memberDao.selectMemberList();
+//	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {	
+		//db에서 회원목록 가져오려면 시간 오래걸림, 가져오기 "전에" 로그인 되었나 안되었나 검사
+		//list.do를 접속할때, 직접 치거나 link 통해서 접속하므로 doGet
 		
-		req.setAttribute("memberList", list);
+		//요청보낸 사용자의 세션을 가져와서 
+		HttpSession session = req.getSession();
 		
-		req.getRequestDispatcher("/WEB-INF/views/member/memList.jsp").forward(req, resp);
+		//세션에 로그인 정보를 꺼내와서
+		MemberVo vo = (MemberVo) session.getAttribute("loginUser"); 
+		//세션에 로그인한 사용자정보 꺼내옴, 
+		//빨간줄 뜨는 이유는 MemberVo 타입이라는 보장이 없어서 => 하지만, 우리는 알고 있으므로 강제 형변환해줌
+		
+		//로그인 정보가 없다면,
+		if (vo==null) { //로그인 실패시, 로그인 화면으로 이동
+		
+		//로그인 페이지로 이동
+			resp.sendRedirect(req.getContextPath() + "/member/login.do"); // 로그인 화면으로 이동
+			return; 
+			// 아래쪽 코드 else로 감싸도 되지만, 보기가 안 좋음(들여쓰기도 해야되고)
+			// => if가 실행되면 아래쪽 코드는 실행 안 되게 해야함 
+			// => method 함수의 실행을 그만두고 돌아가라	=> return;
+		}
+		
+		List<MemberVo> list = memberDao.selectMemberList(); //db에서 회원목록 가져옴
+		
+		req.setAttribute("memberList", list); //가져온 회원목록을 요청객체에 저장
+		
+		req.getRequestDispatcher("/WEB-INF/views/member/memList.jsp").forward(req, resp); // memList.jsp로 forward
 		
 //				// ~ 여기부터 ~ 응답객체에 출력 설정 [형식 + 파이프 라인 생성]
 //				resp.setCharacterEncoding("UTF-8"); //응답객체 인코딩 설정

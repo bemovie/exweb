@@ -95,6 +95,35 @@ public class MemberDaoBatis implements MemberDao{
 
 	}
 
+	@Override
+	public int updateMember(MemberVo vo) {
+		// 데이터베이스에 회원정보가 변경되도록 구현
+		int num = 0;
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			num = session.update("com.exam.member.MemberDao.updateMember", vo);
+			session.commit(); //INSERT,UPDATE,DELETE 후에는 commit 필요
+			}
+		
+		return num;
+	}
+
+	@Override
+	public MemberVo selectLogin(MemberVo mvo) {
+		// vo 에 들어있는 아이디, 비밀번호가 일치하는 회원정보를
+		// 데이터베이스에서 SELECT 하여 반환하도록 구현
+		MemberVo vo = null;
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			//실행할 SQL문과 동일한 이름의 메서드를 사용하여 SQL문 실행
+			//SELECT결과가 1행인 경우(result값이 하나) selectOne, 2행이상인 경우(list값으로) selectList 메서드 사용 
+			//첫번째 인자로 실행할 SQL문의 고유한 이름을 지정
+			//두번째 인자로 SQL문 실행시 필요한 데이터(를 담은 객체)를 전달
+			vo = session.selectOne("com.exam.member.MemberDao.selectLogin", mvo);
+			}
+		
+		return vo;
+	}
+
 	
 //	public List<MemberVo> selectListMember() {
 //	}

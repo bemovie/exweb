@@ -24,11 +24,46 @@ request.setAttribute("memberList", list);
 <style> a{text-decoration-line: none;} a:visited {color:red;} a:hover{color:pink;}
 </style>
 </head>                  
-<body>                   		
-<h1>회원목록</h1>
-<%-- <button><a href="<%=request.getContextPath()%>/member/add.do">회원추가</a></button> --%>
+<body>
+로그인이 된 경우, 로그인한 사용자 이름과 로그아웃 링크를 출력
+로그인이 되지 않은 경우, 로그인과 회원가입(추가) 링크를 출력
+<br>
+
+<jsp:include page="/WEB-INF/views/menu.jsp" />
+
+<!-- 조건문 : if, switch
+core 태그는 c:if나 c:choose 사용  -->
+
+<%-- <!-- 로그인이 된 경우 -->
+<c:if test="${loginUser!=null}">
+${loginUser.memName}
+<button><a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a></button>
+</c:if>
+
+<!-- 로그인이 되지 않은 경우 -->
+<c:if test="${loginUser==null}">
+<button><a href="${pageContext.request.contextPath}/member/login.do">로그인</a></button>
+<button><a href="<%=request.getContextPath()%>/member/add.do">회원추가</a></button>
 <button><a href="${pageContext.request.contextPath}/member/add.do">회원추가</a></button>
 <button><a href="<c:url value="/member/add.do" />">회원추가</a></button>
+</c:if> --%>
+
+
+<%-- <c:choose>
+<c:when test="${loginUser!=null}">
+<c:out value="${loginUser.memName}" /> 님 | <a href="<c:url value="/member/logout.do" />">로그아웃</a>
+</c:when>
+<c:otherwise>
+<a href="<c:url value="/member/login.do" />">로그인</a> <a href="<c:url value="/member/add.do" />">회원가입</a>
+</c:otherwise>
+</c:choose> --%>
+
+<hr> <!-- 수평선 -->  
+                  		
+<h1>회원목록</h1>
+<%-- <button><a href="<%=request.getContextPath()%>/member/add.do">회원추가</a></button> --%>
+<%-- <button><a href="${pageContext.request.contextPath}/member/add.do">회원추가</a></button>
+<button><a href="<c:url value="/member/add.do" />">회원추가</a></button> --%>
 
 
 <button><a href="<%=request.getContextPath()%>/member/delform.do">회원삭제</a></button>

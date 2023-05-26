@@ -14,6 +14,8 @@
 		<result property="memPoint" column="mem_point" />
 	</resultMap>
 	
+	<!-- <parameterMap type="" id=""></parameterMap> -->
+	
 	<!-- 등록할 SQL문과 동일한 이름의 태그를 사용하여 SQL을 등록 -->
 	<!-- 이 파일 내에서 해당 SQL문의 고유한 이름을 id 속성값으로 설정 -->
 	<!-- 일반적으로 이 SQL문을 실행할 때 사용할 DAO인터페이스의 메서드 이름을 지정 -->
@@ -22,12 +24,17 @@
 	<select id="selectMemberList" resultType="MemberVo">
 	<!-- resultMap속성을 사용하여, id가 MemberMap인 resultMap에 써놓은대로 조회결과를 담도록 설정 -->
 	<!-- <select id="selectMemberList" resultMap="MemberMap"> -->
-    	SELECT mem_id, mem_pass, mem_name, mem_point FROM member
+    	SELECT mem_id, mem_name, mem_point FROM member
 	</select>
 	
 	<select id="selectMember" resultType="MemberVo">
-    	SELECT mem_id, mem_pass, mem_name, mem_point FROM member
+    	SELECT mem_id, mem_name, mem_point FROM member
     	WHERE mem_id = #{memId}
+	</select>
+	
+	 <select id="selectLogin" resultType="MemberVo">
+    	SELECT mem_id, mem_name, mem_point FROM member
+    	WHERE mem_id = #{memId} AND mem_pass = #{memPass} 
 	</select>
 	
 	<!--  SQL문 실행시 전달받는 데이터의 타입을 parameterType 속성에 지정 가능(생략도 가능)  --> 
@@ -48,5 +55,11 @@
  <!-- #{속성명} : JDBC의 ? 채우기와 같은 방식으로 동작 -->
  <!-- ${속성명} : 문자열 이어붙이기 방식으로 동작 (보안상 위험하므로 가급적 사용자제) -->
  <!-- "+ vo.getMemId() + "과 같은 방식으로 동작 (SQL Injection에 취약) -->
+  
+  	<update id="updateMember" parameterType="MemberVo">
+  		UPDATE member 
+  		SET mem_name = #{memName}, mem_point = #{memPoint}
+  		WHERE mem_id = #{memId}
+  	</update>
   
 </mapper>

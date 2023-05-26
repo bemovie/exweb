@@ -42,7 +42,7 @@ public class MemEditServlet extends HttpServlet{
 	
 	@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+			
 		
 //		}
 //	
@@ -54,7 +54,7 @@ public class MemEditServlet extends HttpServlet{
 //		req.setCharacterEncoding("UTF-8"); //필터로 이동
 		MemberVo vo = new MemberVo();
 		vo.setMemId(req.getParameter("memId"));
-		vo.setMemPass(req.getParameter("memPass"));
+//		vo.setMemPass(req.getParameter("memPass"));
 		vo.setMemName(req.getParameter("memName"));
 		vo.setMemPoint(Integer.parseInt(req.getParameter("memPoint")));
 		
@@ -63,9 +63,10 @@ public class MemEditServlet extends HttpServlet{
 //		String memName = "호랭이";
 //		int memPoint = 90;
 		
-		int n = memberDao.insertMember(vo);
+//		int n = memberDao.insertMember(vo);
+		int n = memberDao.updateMember(vo); //updateMember 구현 (MemberDao)
 		
-		System.out.println(n + "명의 회원 추가");
+		System.out.println(n + "명의 회원 변경");
 		
 		//회원목록 출력
 		//MemListServlet 실행!
@@ -76,7 +77,7 @@ public class MemEditServlet extends HttpServlet{
 		//		현재 서블릿의 출력 내용 중간에 지정한 서블릿의 출력 내용을 포함
 //		req.getRequestDispatcher("/member/list.do").include(req, resp);
 		//redirect : 지정한 주소로 이동하라는 명령을 담은 응답을 웹브라우저에게 전송
-		resp.sendRedirect(req.getContextPath() + "/member/list.do");
+		resp.sendRedirect(req.getContextPath() + "/member/list.do"); // 목록 화면으로 이동
 		
 		resp.setCharacterEncoding("UTF-8");
 		resp.setContentType("text/html");
@@ -90,7 +91,7 @@ public class MemEditServlet extends HttpServlet{
 //		out.println("</style>");
 		out.println("</head>                  ");
 		out.println("<body>                   ");			
-		out.println("<h1>" + n + "명의 회원 추가 성공</h1>");
+		out.println("<h1>" + n + "명의 회원 수정 성공</h1>");
 		out.println("<a href=\"" + req.getContextPath() + "/member/list.do\">회원목록</a>");
 		out.println("</body>                  ");
 		out.println("</html>                  ");
