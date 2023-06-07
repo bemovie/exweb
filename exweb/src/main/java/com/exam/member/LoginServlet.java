@@ -38,7 +38,9 @@ public class LoginServlet extends HttpServlet{
 //	String user ="web"; //데이터베이스 접속 아이디
 //	String password ="web01"; //데이터베이스 접속 비밀번호
 	
-	private MemberDao memberDao = new MemberDaoBatis();	
+//	private MemberDao memberDao = new MemberDaoBatis(); 	
+//	private MemberService memberService = new MemberServiceImpl();	// MemberService의 구현체
+	private MemberService memberService = MemberServiceImpl.getInstance();
 	
 	@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -74,7 +76,10 @@ public class LoginServlet extends HttpServlet{
 		
 //		int n = memberDao.insertMember(vo);
 //		int n = memberDao.updateMember(vo); //updateMember 구현 (MemberDao)
-		MemberVo mvo = memberDao.selectLogin( vo ); 
+		
+//		MemberVo mvo = memberDao.selectLogin( vo ); 
+		MemberVo mvo = memberService.selectLogin( vo ); 
+		
 		//vo가 memId, memPass 둘 다 가지고 있음, 물론 vo.getMemId(), vo.getMemPass() 로 해도 된다	
 		//변수 vo에 빨간줄은, 중복된 변수이기 때문, 물론 덮어써도 되지만 그냥 mvo로 바꿔준다
 		

@@ -38,7 +38,9 @@ public class MemDelServlet extends HttpServlet{
 //	String user ="web"; //데이터베이스 접속 아이디
 //	String password ="web01"; //데이터베이스 접속 비밀번호
 	
-	private MemberDao memberDao = new MemberDaoBatis();
+//	private MemberDao memberDao = new MemberDaoBatis();
+//	private MemberService memberService = new MemberServiceImpl();	// MemberService의 구현체
+	private MemberService memberService = MemberServiceImpl.getInstance();
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -49,7 +51,8 @@ public class MemDelServlet extends HttpServlet{
 //		String sql = "DELETE FROM member WHERE mem_id = memIdv";
 //		로 할 수 있지만 SQL Injection 공격의 위험이 있으므로 보안을 위해 ?로 대체
 		
-		int n = memberDao.deleteMember(memIdv);
+//		int n = memberDao.deleteMember(memIdv);
+		int n = memberService.deleteMember(memIdv);
 		
 		System.out.println(n + "명의 회원 삭제");
 		

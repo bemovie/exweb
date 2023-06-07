@@ -1,6 +1,8 @@
 package com.exam.comm;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -17,6 +19,16 @@ import com.exam.member.MemberVo;
 
 //@WebFilter()로 등록하거나 설정파일(web.xml)에 등록
 public class LoginFilter implements Filter{
+	//로그인 없이 사용가능한 요청경로들을 저장할 목록
+	private List<String> whiteList = new ArrayList<String>();
+	
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		whiteList.add("/member/login.do");
+		whiteList.add("/member/add.do");
+		
+	}
+	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -29,8 +41,13 @@ public class LoginFilter implements Filter{
 		
 		System.out.println("URI: " + req.getRequestURI());
 		System.out.println("URL: " + req.getRequestURL());
+		String reqPath = req.getRequestURI().substring( req.getContextPath().length() );
+		System.out.println("reqPath : " + reqPath);
 		
-		if (!req.getRequestURI().equals( req.getContextPath() + "/member/login.do")) {
+//		if (!req.getRequestURI().equals( req.getContextPath() + "/member/login.do")) { //요청 주소가 login.do면 그냥 통과하도록 설정 
+//		if ( whiteList.contains( req.getRequestURI() ) == false ) { // whiteList에 등록된 주소는 통과하도록 설정 (contextpath 포함해서 비교)
+//		if ( !whiteList.contains( req.getRequestURI() ) ) { // whiteList에 등록된 주소는 통과하도록 설정 (contextpath 포함해서 비교)
+		if ( !whiteList.contains( reqPath ) ) { // whiteList에 등록된 주소(contextpath를 제외한 주소로 비교)는 통과하도록 설정
 			
 			//요청보낸 사용자의 세션을 가져와서 
 			HttpSession session = req.getSession();

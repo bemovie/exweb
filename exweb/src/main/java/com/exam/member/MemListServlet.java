@@ -51,8 +51,10 @@ public class MemListServlet extends HttpServlet{
 	
 	
 //	private MemberDao memberDao = new MemberDaoJdbc();
-	private MemberDao memberDao = new MemberDaoBatis(); 
+//	private MemberDao memberDao = new MemberDaoBatis(); 
 	//만약 MemberDao가 아닌 MemberDaoJdbc로 받았으면 고쳐줘야됨. 그러나 MemberDao 인터페이스로 받았으므로 고칠 필요x
+//	private MemberService memberService = new MemberServiceImpl();	// MemberService의 구현체
+	private MemberService memberService = MemberServiceImpl.getInstance();
 	
 	@Override
 //	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -79,7 +81,8 @@ public class MemListServlet extends HttpServlet{
 			// => method 함수의 실행을 그만두고 돌아가라	=> return;
 		}
 		
-		List<MemberVo> list = memberDao.selectMemberList(); //db에서 회원목록 가져옴
+//		List<MemberVo> list = memberDao.selectMemberList(); //db에서 회원목록 가져옴
+		List<MemberVo> list = memberService.selectMemberList(); //db에서 회원목록 가져옴
 		
 		req.setAttribute("memberList", list); //가져온 회원목록을 요청객체에 저장
 		

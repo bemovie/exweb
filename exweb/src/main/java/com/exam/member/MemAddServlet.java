@@ -29,7 +29,9 @@ public class MemAddServlet extends HttpServlet{
 //	String user ="web"; //데이터베이스 접속 아이디
 //	String password ="web01"; //데이터베이스 접속 비밀번호
 	
-	private MemberDao memberDao = new MemberDaoBatis();	
+//	private MemberDao memberDao = new MemberDaoBatis();
+//	private MemberService memberService = new MemberServiceImpl();	// MemberService의 구현체
+	private MemberService memberService = MemberServiceImpl.getInstance();
 	
 	@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -59,7 +61,9 @@ public class MemAddServlet extends HttpServlet{
 //		String memName = "호랭이";
 //		int memPoint = 90;
 		
-		int n = memberDao.insertMember(vo);
+//		int n = memberDao.insertMember(vo);
+		int n = memberService.insertMember(vo);
+		
 		
 		System.out.println(n + "명의 회원 추가");
 		
